@@ -17,19 +17,19 @@ int LAYERS = 6;
 
 using namespace std::chrono_literals;
 
-void beginning();
-
 int main() {
 	std::srand(time(0)); // Setting seed for random number genrator
 	int b = 0, n = 1; // Initializing ball's position and current row (n)
 	int timeout = 300;
 	
 	std::vector<float> multipliers;	
-	beginning();
 	//TODO make it not case sensitive
 	std::string command;
 	while (command != "start" && command != "settings" && command != "exit") {
-		beginning();
+		std::system(CLS);
+		std::cout << "Welcome to the pocet plinko!\n\n\n";
+		std::cout << "Type start to start or setting to open settings\n\n";
+		std::cout << "Type exit to exit game\n";
 		std::getline(std::cin, command);
 
 		if (command == "exit") {
@@ -79,11 +79,6 @@ int main() {
 				multipliers[radius] = 0.5;
 				multipliers[radius + 1] = 0.5;
 			}
-			//for (int h = 0; h < LAYERS + 1; ++h) {
-			//	std::cout << multipliers[h] << ' ';
-			//}
-			//std::cout << '\n';
-			//return 0;
 			std::cout << "Enter balance: ";
 			std::getline(std::cin, command);
 			balance = stof(command);
@@ -102,10 +97,8 @@ int main() {
 
 					int start = middle;
 					int current = 0;
-					//std::cout << "h0\n";
 					
 					for (int i = 0; i <= LAYERS; ++i) {
-				//		try {
 						start = middle - i;
 						std::cout << std::string(start - 1, ' ');
 						for (int k = 0; k <= i; ++k) {
@@ -114,19 +107,9 @@ int main() {
 							else
 								std::cout << "  ";
 							current++;
-						}//}} catch (const std::length_error& e) {
-						//	std::cerr << "Error: " << e.what() << '\n';
-						//}
-
-						//std::cout << "h1\n";
+						}
 						std::cout << '\n' << std::flush;
-       
-       
-						//try {
 						std::cout << std::string(start - 1, ' ');
-			//			} catch (const std::length_error& e) {
-			//				std::cerr << "Error length: " << e.what() << '\n';
-			//			}
 						if (i == LAYERS) {
 							for (int j = 0; j <= i; ++j) {
 								std::cout << "U ";
@@ -139,16 +122,11 @@ int main() {
 						std::cout << '\n' << std::flush;
 					}
 					std::cout << '\n';
-					//std::cout << "h2\n";
 					std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
-					//std::cout << "h3\n";
 					if (n == LAYERS + 1) break;
-					//std::cout << "h4\n";
 					b += rand() % 2 + n;
 					n++;
 				}
-				//std::cout << b << '\n';
-				//std::cout << b - decrement << '\n';
 				std::cout << "You have landed on " << float(multipliers[b - decrement]) << "x!\n";
 				std::cout << "You have won " << float(bet * multipliers[b - decrement]) << "!\n";
 				balance += bet * multipliers[b - decrement];
@@ -160,11 +138,4 @@ int main() {
 		}
 	}
 	return 0;
-}
-
-void beginning() {
-	std::system(CLS);
-	std::cout << "Welcome to the pocet plinko!\n\n\n";
-	std::cout << "Type start to start or setting to open settings\n\n";
-	std::cout << "Type exit to exit game\n";
 }
