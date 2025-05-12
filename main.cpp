@@ -24,10 +24,7 @@ int main() {
 	int b = 0, n = 1; // Initializing ball's position and current row (n)
 	int timeout = 300;
 	
-	
-	int width = 2 * LAYERS + 1; // Calculating width of whole triangle
-	int middle = width / 2 + 1; // Calculating middle of this triangle
-	
+	std::vector<float> multipliers;	
 	beginning();
 	//TODO make it not case sensitive
 	std::string command;
@@ -62,7 +59,10 @@ int main() {
 		} else if (command == "start") {
 			float balance, bet;
 			int decrement = (LAYERS * (LAYERS + 1)) / 2;
-			std::vector<float> multipliers(LAYERS + 1);
+			int width = 2 * LAYERS + 1; // Calculating width of whole triangle
+			int middle = width / 2 + 1; // Calculating middle of this triangle
+
+			multipliers = std::vector<float>(LAYERS + 1);
 			if (LAYERS % 2 == 0) {
 				int radius = (LAYERS + 1) / 2;
 				for (int f = 0; f < radius; ++f) {
@@ -90,7 +90,7 @@ int main() {
 			while (command != "exit" && balance > 0) {
 				//TODO make bets real
 				system(CLS);
-				std::cout << "Your balance: " << balance << '\n';
+				std::cout << "Your balanme: " << balance << '\n';
 				std::cout << "Enter bet: ";
 				std::getline(std::cin, command);
 				bet = stof(command);
@@ -102,8 +102,10 @@ int main() {
 
 					int start = middle;
 					int current = 0;
-
+					//std::cout << "h0\n";
+					
 					for (int i = 0; i <= LAYERS; ++i) {
+				//		try {
 						start = middle - i;
 						std::cout << std::string(start - 1, ' ');
 						for (int k = 0; k <= i; ++k) {
@@ -112,9 +114,19 @@ int main() {
 							else
 								std::cout << "  ";
 							current++;
-						}
-						std::cout << '\n';
+						}//}} catch (const std::length_error& e) {
+						//	std::cerr << "Error: " << e.what() << '\n';
+						//}
+
+						//std::cout << "h1\n";
+						std::cout << '\n' << std::flush;
+       
+       
+						//try {
 						std::cout << std::string(start - 1, ' ');
+			//			} catch (const std::length_error& e) {
+			//				std::cerr << "Error length: " << e.what() << '\n';
+			//			}
 						if (i == LAYERS) {
 							for (int j = 0; j <= i; ++j) {
 								std::cout << "U ";
@@ -124,11 +136,14 @@ int main() {
 								std::cout << "I ";
 							}
 						}
-						std::cout << '\n';
+						std::cout << '\n' << std::flush;
 					}
 					std::cout << '\n';
+					//std::cout << "h2\n";
 					std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+					//std::cout << "h3\n";
 					if (n == LAYERS + 1) break;
+					//std::cout << "h4\n";
 					b += rand() % 2 + n;
 					n++;
 				}
