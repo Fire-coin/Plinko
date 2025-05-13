@@ -17,6 +17,8 @@ int LAYERS = 6;
 
 using namespace std::chrono_literals;
 
+std::string toLower(const std::string);
+
 int main() {
 	std::srand(time(0)); // Setting seed for random number genrator
 	int b = 0, n = 1; // Initializing ball's position and current row (n)
@@ -138,4 +140,15 @@ int main() {
 		}
 	}
 	return 0;
+}
+
+std::string toLower(const std::string str) {
+	std::string output;
+	for (const char& i : str) {
+		if (i >= 65 && i <= 90)
+			output += (i + 32);
+		else
+			output += i;
+	}
+	return output;
 }
