@@ -29,7 +29,7 @@ int main() {
 	while (command != "start" && command != "settings" && command != "exit") {
 		std::system(CLS);
 		std::cout << "Welcome to the pocet plinko!\n\n\n";
-		std::cout << "Type start to start or setting to open settings\n\n";
+		std::cout << "Type start to start or settings to open settings\n\n";
 		std::cout << "Type exit to exit game\n";
 		std::getline(std::cin, command);
 		command = toLower(command);
@@ -96,22 +96,22 @@ int main() {
 			while (balance <= 0) {
 				std::cout << "Enter balance: ";
 				std::getline(std::cin, command);
+				std::system(CLS);
 				try {
 					balance = stof(command);
 				} catch (const std::invalid_argument& e) {
 					std::cout << "Invalid balance\n";
 				} catch (const std::out_of_range& e) {
-					LAYERS = 6;
+					std::cout << "Balance out of allowed range\n";
 				}
 				if (balance <= 0) {
-					std::system(CLS);
 					std::cout << "Balance has to be positive\n";
 				}
 			}
 			while (command != "exit" && balance > 0) {
 				//TODO make bets real
 				system(CLS);
-				std::cout << "Your balanme: " << balance << '\n';
+				std::cout << "Your balance: " << balance << '\n';
 				std::cout << "Enter bet: ";
 				std::getline(std::cin, command);
 				bet = stof(command);
