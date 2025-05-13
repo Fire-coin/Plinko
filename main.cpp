@@ -118,7 +118,7 @@ int main() {
 			}
 			while (command != "exit" && balance > 0) {
 				system(CLS);
-				while (bet <= 0) {
+				do {
 					std::cout << "Your balance: " << balance << '\n';
 					std::cout << "Enter bet: ";
 					std::getline(std::cin, command);
@@ -133,7 +133,7 @@ int main() {
 					if (bet <= 0) {
 						std::cout << "Bet has to be positive\n";
 					}
-				}
+				} while (bet <= 0);
 				balance -= bet;
 				b = 0;
 				n = 1;
