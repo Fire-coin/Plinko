@@ -5,6 +5,7 @@
 #include <thread>
 #include <stdlib.h>
 #include <vector>
+#include <cmath>
 
 #ifdef _WIN32
 const char CLS[4] = "cls";
@@ -18,6 +19,9 @@ int LAYERS = 6;
 using namespace std::chrono_literals;
 
 std::string toLower(const std::string);
+int factorial(int n);
+std::vector<float> calculateRawMultipliers(int layers);
+std::vector<float> calculateCooficients(int layers, float c);
 
 int main() {
 	std::srand(time(0)); // Setting seed for random number genrator
@@ -194,5 +198,36 @@ std::string toLower(const std::string str) {
 		else
 			output += i;
 	}
+	return output;
+}
+
+int factorial(int n) {
+	int output = 1;
+	if (n == 0) return -1;
+	if (n < 0) return -1;
+	while (n > 1) {
+		output *= n;
+		n--;
+	}
+	return output;
+}
+
+std::vector<float> calculateRawMultipliers(int layers) {
+	std::vector<float> multipliers(layers + 1);
+	int landings; // It is how many times the ball would land if we throw it 2^(layers) times on average
+	for (int k = 0; k <= layers; ++k) {
+		landings = factorial(layers) / (factorial(layers - k) * factorial(k)); // Calculating C(n, k) on line, where it will land
+		//Probability of landing on some spot is (landings / 2^(layers))
+		//and row multiplier is (1 / probability), so in the end
+		//row multiplier is (2^(layers) / landings)
+		multipliers[k] = std::exp2(layers) / landings;
+	}
+	return multipliers;
+}
+
+std::vector<float> calculateCooficients(int layers, float c) {
+	std::vector<float> output(layers + 1);
+	//TODO finish summation and then normalization
+
 	return output;
 }
