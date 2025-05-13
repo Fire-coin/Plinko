@@ -227,7 +227,10 @@ std::vector<float> calculateRawMultipliers(int layers) {
 
 std::vector<float> calculateCooficients(int layers, float c) {
 	std::vector<float> output(layers + 1);
-	//TODO finish summation and then normalization
-
+	std::vector<float> rawMult = calculateRawMultipliers(layers);
+	float normFactor = c / (layers + 1);
+	for (int i = 0; i < layers + 1; ++i) {
+		output[i] = rawMult[i] * normFactor;
+	}
 	return output;
 }
