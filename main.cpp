@@ -47,26 +47,34 @@ int main() {
 				command = toLower(command);
 				if (command == "1") {
 					std::system(CLS);
-					std::cout << "Enter new value for layers: ";
-					std::getline(std::cin, command);
-					try {
-						LAYERS = std::stoi(command);
-					} catch (const std::invalid_argument& e) {
-						LAYERS = 6;
-					} catch (const std::out_of_range& e) {
-						LAYERS = 6;
-					}
+					do {
+						std::cout << "Enter new value for layers: ";
+						std::getline(std::cin, command);
+						std::system(CLS);
+						try {
+							LAYERS = std::stoi(command);
+						} catch (const std::invalid_argument& e) {
+							LAYERS = 6;
+						} catch (const std::out_of_range& e) {
+							LAYERS = 6;
+						}
+						if (LAYERS <= 0) std::cout << "Number of layers must be positive\n";
+					} while (LAYERS <= 0);
 				} else if (command == "2") {
 					std::system(CLS);
-					std::cout << "Enter new value for time per layer(ms): ";
-					std::getline(std::cin, command);
-					try {
-						timeout = stoi(command);
-					} catch (const std::invalid_argument& e) {
-						timeout = 300;
-					} catch (const std::out_of_range& e) {
-						timeout = 300;
-					}
+					do {
+						std::cout << "Enter new value for time per layer(ms): ";
+						std::getline(std::cin, command);
+						std::system(CLS);
+						try {
+							timeout = stoi(command);
+						} catch (const std::invalid_argument& e) {
+							timeout = 300;
+						} catch (const std::out_of_range& e) {
+							timeout = 300;
+						}
+						if (timeout <= 0)  std::cout << "Timeout must be possitive\n";
+					} while (timeout <= 0);
 				}
 			}
 			command = "";
@@ -109,12 +117,23 @@ int main() {
 				}
 			}
 			while (command != "exit" && balance > 0) {
-				//TODO make bets real
 				system(CLS);
-				std::cout << "Your balance: " << balance << '\n';
-				std::cout << "Enter bet: ";
-				std::getline(std::cin, command);
-				bet = stof(command);
+				while (bet <= 0) {
+					std::cout << "Your balance: " << balance << '\n';
+					std::cout << "Enter bet: ";
+					std::getline(std::cin, command);
+					std::system(CLS);
+					try {
+						bet = stof(command);
+					} catch (const std::invalid_argument& e) {
+						std::cout << "Invalid bet\n";
+					} catch (const std::out_of_range& e) {
+						std::cout << "Bet out of allowed range\n";
+					}
+					if (bet <= 0) {
+						std::cout << "Bet has to be positive\n";
+					}
+				}
 				balance -= bet;
 				b = 0;
 				n = 1;
