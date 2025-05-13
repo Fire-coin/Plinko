@@ -89,24 +89,8 @@ int main() {
 			int width = 2 * LAYERS + 1; // Calculating width of whole triangle
 			int middle = width / 2 + 1; // Calculating middle of this triangle
 
-			multipliers = std::vector<float>(LAYERS + 1);
-			if (LAYERS % 2 == 0) {
-				int radius = (LAYERS + 1) / 2;
-				for (int f = 0; f < radius; ++f) {
-					multipliers[f] = 0.5 + (radius - f) * 0.3;
-					multipliers[LAYERS - f] = 0.5 + (radius - f) * 0.3;
-				}
-				multipliers[radius] = 0.5;
-			} else {
-				int radius = (LAYERS + 1) / 2 - 1;
-				for (int f = 0; f < radius; ++f) {
-					multipliers[f] = 0.5 + (radius - f) * 0.3;
-					multipliers[LAYERS - f] = 0.5 + (radius - f) * 0.3;
-				}
-				multipliers[radius] = 0.5;
-				multipliers[radius + 1] = 0.5;
-			}
-			while (balance <= 0) {
+			multipliers = calculateCooficients(LAYERS, 1, 1);
+			do {
 				std::cout << "Enter balance: ";
 				std::getline(std::cin, command);
 				std::system(CLS);
@@ -120,7 +104,7 @@ int main() {
 				if (balance <= 0) {
 					std::cout << "Balance has to be positive\n";
 				}
-			}
+			} while (balance <= 0);
 			while (command != "exit" && balance > 0) {
 				system(CLS);
 				do {
@@ -135,10 +119,9 @@ int main() {
 					} catch (const std::out_of_range& e) {
 						std::cout << "Bet out of allowed range\n";
 					}
-					if (bet <= 0) {
-						std::cout << "Bet has to be positive\n";
-					}
-				} while (bet <= 0);
+					if (bet <= 0) std::cout << "Bet has to be positive\n";
+					if (bet > balance) std::cout << "Not enough balance\n";
+				} while (bet <= 0 || bet > balance);
 				balance -= bet;
 				b = 0;
 				n = 1;
