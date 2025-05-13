@@ -25,7 +25,6 @@ int main() {
 	int timeout = 300;
 	
 	std::vector<float> multipliers;	
-	//TODO make it not case sensitive
 	std::string command;
 	while (command != "start" && command != "settings" && command != "exit") {
 		std::system(CLS);
@@ -33,7 +32,7 @@ int main() {
 		std::cout << "Type start to start or setting to open settings\n\n";
 		std::cout << "Type exit to exit game\n";
 		std::getline(std::cin, command);
-
+		command = toLower(command);
 		if (command == "exit") {
 			std::cout << "Thanks for playing!\n";
 			return 0;
@@ -45,16 +44,29 @@ int main() {
 				std::cout << "Enter 1 for layers or 2 for time per layer\n\n";
 				std::cout << "Enter exit to exit to main menu\n";
 				std::getline(std::cin, command);
+				command = toLower(command);
 				if (command == "1") {
 					std::system(CLS);
 					std::cout << "Enter new value for layers: ";
 					std::getline(std::cin, command);
-					LAYERS = std::stoi(command);
+					try {
+						LAYERS = std::stoi(command);
+					} catch (const std::invalid_argument& e) {
+						LAYERS = 6;
+					} catch (const std::out_of_range& e) {
+						LAYERS = 6;
+					}
 				} else if (command == "2") {
 					std::system(CLS);
 					std::cout << "Enter new value for time per layer(ms): ";
 					std::getline(std::cin, command);
-					timeout = stoi(command);
+					try {
+						timeout = stoi(command);
+					} catch (const std::invalid_argument& e) {
+						timeout = 300;
+					} catch (const std::out_of_range& e) {
+						timeout = 300;
+					}
 				}
 			}
 			command = "";
@@ -81,9 +93,21 @@ int main() {
 				multipliers[radius] = 0.5;
 				multipliers[radius + 1] = 0.5;
 			}
-			std::cout << "Enter balance: ";
-			std::getline(std::cin, command);
-			balance = stof(command);
+			while (balance <= 0) {
+				std::cout << "Enter balance: ";
+				std::getline(std::cin, command);
+				try {
+					balance = stof(command);
+				} catch (const std::invalid_argument& e) {
+					std::cout << "Invalid balance\n";
+				} catch (const std::out_of_range& e) {
+					LAYERS = 6;
+				}
+				if (balance <= 0) {
+					std::system(CLS);
+					std::cout << "Balance has to be positive\n";
+				}
+			}
 			while (command != "exit" && balance > 0) {
 				//TODO make bets real
 				system(CLS);
@@ -135,6 +159,7 @@ int main() {
 
 				std::cout << "Press enter to continue or exit to exit to main menu\n";
 				std::getline(std::cin, command);
+				command = toLower(command);
 			}
 			command = "";
 		}
