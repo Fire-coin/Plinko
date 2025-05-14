@@ -28,6 +28,7 @@ int main() {
 	std::srand(time(0)); // Setting seed for random number genrator
 	int b = 0, n = 1; // Initializing ball's position and current row (n)
 	int timeout = 300;
+	float fairnessIndex = 1.0f;
 	
 	std::vector<float> multipliers;	
 	std::string command;
@@ -45,8 +46,9 @@ int main() {
 			while (command != "exit") {
 				std::system(CLS);
 				std::cout << "Layers: " << LAYERS << '\n';
-				std::cout << "Time per layer(ms): " << timeout << "\n\n\n";
-				std::cout << "Enter 1 for layers or 2 for time per layer\n\n";
+				std::cout << "Time per layer(ms): " << timeout << '\n';
+				std::cout << "Fairness index: " << fairnessIndex << "\n\n\n";
+				std::cout << "Enter 1 for layers or 2 for time per layer or 3 for fairness index\n\n";
 				std::cout << "Enter exit to exit to main menu\n";
 				std::getline(std::cin, command);
 				command = toLower(command);
@@ -80,6 +82,21 @@ int main() {
 						}
 						if (timeout <= 0)  std::cout << "Timeout must be possitive\n";
 					} while (timeout <= 0);
+				} else if (command == "3") {
+					std::system(CLS);
+					do {
+						std::cout << "Enter new value for fairness index: ";
+						std::getline(std::cin, command);
+						std::system(CLS);
+						try {
+							fairnessIndex = stof(command);
+						} catch (const std::invalid_argument& e) {
+							fairnessIndex = 1.0f;
+						} catch (const std::out_of_range& e) {
+							fairnessIndex = 1.0f;
+						}
+						if (fairnessIndex <= 0)  std::cout << "Fairness index must be possitive\n";
+					} while (fairnessIndex <= 0);
 				}
 			}
 			command = "";
@@ -89,7 +106,7 @@ int main() {
 			int width = 2 * LAYERS + 1; // Calculating width of whole triangle
 			int middle = width / 2 + 1; // Calculating middle of this triangle
 
-			multipliers = calculateCooficients(LAYERS, 1, 1);
+			multipliers = calculateCooficients(LAYERS, fairnessIndex, 1);
 			do {
 				std::cout << "Enter balance: ";
 				std::getline(std::cin, command);
