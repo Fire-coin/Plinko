@@ -23,6 +23,8 @@ int factorial(int n);
 std::vector<float> calculateRawMultipliers(int layers);
 std::vector<float> calculateCooficients(int layers, float c, int decPlaces);
 float roundUpTo(float num, int decPlaces);
+std::vector<float> calculateQuadraticCooficients(int layers, float c, int decPlaces);
+
 
 int main() {
 	std::srand(time(0)); // Setting seed for random number genrator
@@ -45,7 +47,7 @@ int main() {
 		} else if (command == "settings") {
 			while (command != "exit") {
 				std::system(CLS);
-				std::cout << "Layers: " << LAYERS << '\n';
+				std::cout << "Layers(1-13): " << LAYERS << '\n';
 				std::cout << "Time per layer(ms): " << timeout << '\n';
 				std::cout << "Fairness index: " << fairnessIndex << "\n\n\n";
 				std::cout << "Enter 1 for layers or 2 for time per layer or 3 for fairness index\n\n";
@@ -55,7 +57,7 @@ int main() {
 				if (command == "1") {
 					std::system(CLS);
 					do {
-						std::cout << "Enter new value for layers: ";
+						std::cout << "Enter new value for layers(1-13): ";
 						std::getline(std::cin, command);
 						std::system(CLS);
 						try {
@@ -65,8 +67,9 @@ int main() {
 						} catch (const std::out_of_range& e) {
 							LAYERS = 6;
 						}
-						if (LAYERS <= 0) std::cout << "Number of layers must be positive\n";
-					} while (LAYERS <= 0);
+						//if (LAYERS <= 0) std::cout << "Number of layers must be positive\n";
+						if (LAYERS < 1 || LAYERS > 13) std::cout << "Number of layers must be between 1 and 13\n";
+					} while (LAYERS < 1 || LAYERS > 13);
 				} else if (command == "2") {
 					std::system(CLS);
 					do {
@@ -105,8 +108,10 @@ int main() {
 			int decrement = (LAYERS * (LAYERS + 1)) / 2;
 			int width = 2 * LAYERS + 1; // Calculating width of whole triangle
 			int middle = width / 2 + 1; // Calculating middle of this triangle
-
-			multipliers = calculateCooficients(LAYERS, fairnessIndex, 1);
+			if (LAYERS < 13)
+				multipliers = calculateCooficients(LAYERS, fairnessIndex, 2);
+			else
+				multipliers = calculateQuadraticCooficients(LAYERS, fairnessIndex, 2);
 			do {
 				std::cout << "Enter balance: ";
 				std::getline(std::cin, command);
@@ -204,7 +209,7 @@ std::string toLower(const std::string str) {
 
 int factorial(int n) {
 	int output = 1;
-	if (n == 0) return -1;
+	if (n == 0) return 1;
 	if (n < 0) return -1;
 	while (n > 1) {
 		output *= n;
@@ -239,3 +244,15 @@ std::vector<float> calculateCooficients(int layers, float c, int decPlaces) {
 float roundUpTo(float num, int decPlaces) {
 	return std::round(num * std::pow(10, decPlaces)) / std::pow(10, decPlaces);
 }
+
+std::vector<float> calculateQuadraticCooficients(int layers, float c, int decPlaces) {
+	std::vector<float> output(layers + 1);
+	std::vector<float> rawMult = calculateRawMultipliers(layers);
+	double boundA = std::cbrt(1.5 * c);
+	double Dx = (2 * boundA) / (layers + 1); // Calculating delta x
+	for (int k = 0; k <= layers; ++k) {
+		output[k] = roundUpTo(rawMult[k] * ((std::pow(-boundA + (k + 1) * Dx, 3) / 3) - (std::pow(-boundA + k * Dx, 3) / 3)), decPlaces);
+	}
+	return output;
+}
+
